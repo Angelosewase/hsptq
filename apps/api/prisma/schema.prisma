@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum VisitSource {
+  app
+  ussd
+  qr
+}
+
+enum VisitStatus {
+  waiting
+  called
+  served
+  no_show
+}
+
+model Patient {
+  id         String    @id @default(cuid())
+  name       String
+  phone      String    @unique
+  nationalId String?   @map("national_id")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  visits     Visit[]
+
+  @@map("patients")
+}
+
+model Department {
+  id       String   @id @default(cuid())
+  name     String   @unique
+  active   Boolean  @default(true)
+  visits   Visit[]
+  staff    Staff[]
+
+  @@map("departments")
+}
+
+model Visit {
+  id           String      @id @default(cuid())
+  patientId    String      @map("patient_id")
+  departmentId String      @map("department_id")
+  queueNumber  Int         @map("queue_number")
+  source       VisitSource
+  status       VisitStatus @default(waiting)
+  createdAt    DateTime    @default(now()) @map("created_at")
+  calledAt     DateTime?   @map("called_at")
+  servedAt     DateTime?   @map("served_at")
+  patient      Patient     @relation(fields: [patientId], references: [id])
+  department   Department  @relation(fields: [departmentId], references: [id])
+
+  @@index([departmentId, createdAt])
+  @@index([departmentId, status])
+  @@map("visits")
+}
+
+model UssdSession {
+  sessionId   String   @id
+  currentStep String?  @map("current_step")
+  collected   Json?    @map("collected_data")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("ussd_sessions")
+}
+
+model Staff {
+  id           String       @id @default(cuid())
+  name         String
+  login        String       @unique
+  role         String
+  departmentId String?      @map("department_id")
+  department   Department?  @relation(fields: [departmentId], references: [id])
+
+  @@map("staff")
+}
