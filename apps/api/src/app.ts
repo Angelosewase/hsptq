@@ -4,9 +4,11 @@ import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import { prettyJSON } from "hono/pretty-json";
 import { notFound, onError } from "./lib/http";
+import { registerAuthRoutes } from "./routes/auth";
 import { registerDepartmentRoutes } from "./routes/departments";
 import { registerHealthRoutes } from "./routes/health";
 import { registerPatientRoutes } from "./routes/patients";
+import { registerUssdRoutes } from "./routes/ussd";
 import { registerVisitRoutes } from "./routes/visits";
 
 export function createApp() {
@@ -19,9 +21,11 @@ export function createApp() {
   const api = new OpenAPIHono();
 
   registerHealthRoutes(api);
+  registerAuthRoutes(api);
   registerPatientRoutes(api);
   registerDepartmentRoutes(api);
   registerVisitRoutes(api);
+  registerUssdRoutes(api);
 
   app.route("/api", api);
 

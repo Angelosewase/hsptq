@@ -7,6 +7,24 @@ export const errorSchema = z.object({
   }),
 });
 
+export const loginRequestSchema = z.object({
+  login: z.string().optional(),
+  phone: z.string().optional(),
+  password: z.string(),
+});
+
+export const authResponseSchema = z.object({
+  token: z.string(),
+});
+
+export const staffSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  login: z.string(),
+  role: z.string(),
+  departmentId: z.string().nullable(),
+});
+
 export const patientSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -19,6 +37,18 @@ export const departmentSchema = z.object({
   id: z.string(),
   name: z.string(),
   active: z.boolean(),
+});
+
+export const queueResponseSchema = z.object({
+  waiting: z.number(),
+  visits: z.array(z.object({
+    id: z.string(),
+    queueNumber: z.number(),
+    status: z.string(),
+    patientName: z.string(),
+    source: z.string(),
+    estimatedWaitMinutes: z.number().optional(),
+  })),
 });
 
 export const visitSchema = z.object({
@@ -53,6 +83,23 @@ export type PatientResponse = z.infer<typeof patientSchema>;
 export type DepartmentResponse = z.infer<typeof departmentSchema>;
 export type VisitResponse = z.infer<typeof visitSchema>;
 export type VisitStatusResponse = z.infer<typeof visitStatusSchema>;
+export type StaffResponse = z.infer<typeof staffSchema>;
+
+export function toStaffResponse(staff: {
+  id: string;
+  name: string;
+  login: string;
+  role: string;
+  departmentId: string | null;
+}): StaffResponse {
+  return {
+    id: staff.id,
+    name: staff.name,
+    login: staff.login,
+    role: staff.role,
+    departmentId: staff.departmentId,
+  };
+}
 
 export function toPatientResponse(patient: {
   id: string;

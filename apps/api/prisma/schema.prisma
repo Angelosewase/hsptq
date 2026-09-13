@@ -25,6 +25,8 @@ model Patient {
   name       String
   phone      String    @unique
   nationalId String?   @map("national_id")
+  password   String?
+  pin        String?
   createdAt  DateTime  @default(now()) @map("created_at")
   visits     Visit[]
 
@@ -72,6 +74,7 @@ model Staff {
   id           String       @id @default(cuid())
   name         String
   login        String       @unique
+  password     String
   role         String
   departmentId String?      @map("department_id")
   department   Department?  @relation(fields: [departmentId], references: [id])

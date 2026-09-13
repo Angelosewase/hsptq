@@ -1,6 +1,6 @@
 import { OpenAPIHono, createRoute, z } from "@hono/zod-openapi";
-import { getPrisma } from "../lib/prisma";
 import { errorSchema, patientSchema, toPatientResponse } from "../schemas";
+import { createPatient, findPatientByPhone } from "../services/patient.service";
 
 const createPatientRoute = createRoute({
   method: "post",
@@ -14,6 +14,8 @@ const createPatientRoute = createRoute({
               name: z.string().min(1).max(200),
               phone: z.string().regex(/^\+?\d{8,15}$/, "Invalid phone number"),
               nationalId: z.string().min(1).max(60).optional(),
+              password: z.string().optional(),
+              pin: z.string().length(4).optional(),
             })
             .openapi("CreatePatientRequest"),
         },
@@ -39,22 +41,13 @@ const createPatientRoute = createRoute({
 export function registerPatientRoutes(app: OpenAPIHono) {
   app.openapi(createPatientRoute, async (c) => {
     const input = c.req.valid("json");
-    const prisma = getPrisma();
 
-    const existing = await prisma.patient.findUnique({
-      where: { phone: input.phone },
-    });
+    const existing = await findPatientByPhone(input.phone);
     if (existing) {
       return c.json(toPatientResponse(existing), 200);
     }
 
-    const patient = await prisma.patient.create({
-      data: {
-        name: input.name,
-        phone: input.phone,
-        nationalId: input.nationalId,
-      },
-    });
+    const patient = await createPatient(input);
     return c.json(toPatientResponse(patient), 201);
   });
 }

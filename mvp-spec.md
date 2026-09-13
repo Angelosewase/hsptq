@@ -68,35 +68,7 @@ Queue numbers reset daily, scoped per department.
 
 ---
 
-## 6. Core API Endpoints (draft)
-
-| Method | Endpoint                  | Purpose                                                             |
-| ------ | ------------------------- | ------------------------------------------------------------------- |
-| POST   | `/api/patients`           | Create or look up a patient by phone number                         |
-| GET    | `/api/departments`        | List active departments                                             |
-| POST   | `/api/visits`             | Check in — creates a visit, assigns queue number                    |
-| GET    | `/api/visits/:id/status`  | Poll current position / estimated wait                              |
-| POST   | `/api/visits/:id/call`    | Staff: call this patient next                                       |
-| POST   | `/api/visits/:id/serve`   | Staff: mark as served                                               |
-| POST   | `/api/visits/:id/no-show` | Staff: mark as no-show                                              |
-| POST   | `/api/ussd/webhook`       | Receives session events from the USSD aggregator, returns menu text |
-
----
-
-## 7. Tech Stack (proposed)
-
-- **Backend:** Node.js API (Next.js API routes or standalone Express service)
-- **Web dashboard:** Next.js
-- **Mobile app:** React Native via Expo
-- **Database:** PostgreSQL + Prisma ORM
-- **USSD:** Africa's Talking sandbox (or equivalent aggregator) for development/demo; no live short-code needed yet
-- **Notifications:** Expo push notifications (app), SMS gateway (USSD flow and as a fallback for app users)
-- **Monorepo tooling:** Turborepo or Nx for shared builds/types across backend, web, and mobile
-- **Containerization:** Podman/Docker for backend + database, to ease the move from local dev to a pilot server later
-
----
-
-## 8. Explicitly Out of Scope for MVP
+## 6. Explicitly Out of Scope for MVP
 
 - Multi-tenant support (multiple hospitals/facilities)
 - Native web access for patients
@@ -109,7 +81,7 @@ Queue numbers reset daily, scoped per department.
 
 ---
 
-## 9. Build Phases
+## 7. Build Phases
 
 1. **Core API + database** — patient, department, and visit models; queue number assignment logic (channel-agnostic)
 2. **Staff web dashboard** — live queue view, call-next, mark served/no-show (fastest path to a demoable system)
@@ -119,7 +91,7 @@ Queue numbers reset daily, scoped per department.
 
 ---
 
-## 10. Success Criteria for the Demo
+## 8. Success Criteria for the Demo
 
 - A patient can register and receive a queue number via the mobile app **and** via USSD, ending up as the same patient record
 - A QR code at a (simulated) hospital location opens the app directly into check-in for the correct department
@@ -129,7 +101,7 @@ Queue numbers reset daily, scoped per department.
 
 ---
 
-## 11. Open Questions for Later Phases
+## 9. Open Questions for Later Phases
 
 - Which facility will host the pilot, and what departments will it start with?
 - Will a real USSD short-code and SMS gateway be needed before or after pilot approval?
