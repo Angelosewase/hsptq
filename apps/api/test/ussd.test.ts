@@ -3,7 +3,7 @@ import { createApp } from "../src/app";
 import { handleUssdRequest } from "../src/services/ussd.service";
 
 vi.mock("../src/services/ussd.service", () => ({
-  handleUssdRequest: vi.fn()
+  handleUssdRequest: vi.fn(),
 }));
 
 describe("USSD Routes", () => {
@@ -11,7 +11,7 @@ describe("USSD Routes", () => {
     vi.mocked(handleUssdRequest).mockResolvedValue("CON Welcome");
 
     const app = createApp();
-    
+
     // Simulate urlencoded form data
     const formData = new URLSearchParams();
     formData.append("sessionId", "session-123");
@@ -21,7 +21,7 @@ describe("USSD Routes", () => {
     const res = await app.request("/api/ussd/africastalking", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: formData.toString()
+      body: formData.toString(),
     });
 
     expect(res.status).toBe(200);

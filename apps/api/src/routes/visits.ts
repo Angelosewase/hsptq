@@ -1,6 +1,15 @@
 import { OpenAPIHono, createRoute, z } from "@hono/zod-openapi";
-import { errorSchema, toVisitResponse, visitSchema, visitStatusSchema } from "../schemas";
-import { checkIn, getVisitStatus, updateVisitStatus } from "../services/visit.service";
+import {
+  errorSchema,
+  toVisitResponse,
+  visitSchema,
+  visitStatusSchema,
+} from "../schemas";
+import {
+  checkIn,
+  getVisitStatus,
+  updateVisitStatus,
+} from "../services/visit.service";
 import { getPrisma } from "../lib/prisma"; // just for finding patient/department in checkIn if needed, or we can just catch errors
 import { staffAuth, authMiddleware } from "../lib/middleware";
 
@@ -52,6 +61,25 @@ const visitStatusRoute = createRoute({
   },
 });
 
+const activeVisitRoute = createRoute({
+  method: "get",
+  path: "/visits/active",
+  responses: {
+    200: {
+      description: "Active visit for the authenticated patient",
+      content: { "application/json": { schema: visitSchema } },
+    },
+    401: {
+      description: "Unauthorized",
+      content: { "application/json": { schema: errorSchema } },
+    },
+    404: {
+      description: "No active visit found",
+      content: { "application/json": { schema: errorSchema } },
+    },
+  },
+});
+
 function stateTransitionRoute(path: string, description: string) {
   return createRoute({
     method: "post" as const,
@@ -70,15 +98,25 @@ function stateTransitionRoute(path: string, description: string) {
   });
 }
 
-const callRoute = stateTransitionRoute("/visits/{id}/call", "Call the patient next");
-const serveRoute = stateTransitionRoute("/visits/{id}/serve", "Mark the visit as served");
-const noShowRoute = stateTransitionRoute("/visits/{id}/no-show", "Mark the visit as no-show");
+const callRoute = stateTransitionRoute(
+  "/visits/{id}/call",
+  "Call the patient next",
+);
+const serveRoute = stateTransitionRoute(
+  "/visits/{id}/serve",
+  "Mark the visit as served",
+);
+const noShowRoute = stateTransitionRoute(
+  "/visits/{id}/no-show",
+  "Mark the visit as no-show",
+);
 
 export function registerVisitRoutes(app: OpenAPIHono) {
   // Use authMiddleware for patient actions
   app.use("/visits", authMiddleware);
+  app.use("/visits/active", authMiddleware);
   app.use("/visits/*/status", authMiddleware);
-  
+
   // Use staffAuth for staff actions
   app.use("/visits/*/call", staffAuth);
   app.use("/visits/*/serve", staffAuth);
@@ -86,7 +124,7 @@ export function registerVisitRoutes(app: OpenAPIHono) {
 
   app.openapi(checkInRoute, async (c) => {
     const input = c.req.valid("json");
-    
+
     // Quick validation
     const prisma = getPrisma();
     const [patient, department] = await Promise.all([
@@ -95,11 +133,42 @@ export function registerVisitRoutes(app: OpenAPIHono) {
     ]);
     if (!patient || !department) {
       const missing = !patient ? "Patient" : "Department";
-      return c.json({ error: { message: `${missing} not found`, status: 404 } }, 404);
+      return c.json(
+        { error: { message: `${missing} not found`, status: 404 } },
+        404,
+      );
     }
 
-    const visit = await checkIn(input.patientId, input.departmentId, input.source);
+    const visit = await checkIn(
+      input.patientId,
+      input.departmentId,
+      input.source,
+    );
     return c.json(toVisitResponse(visit), 201);
+  });
+
+  app.openapi(activeVisitRoute, async (c) => {
+    // The auth middleware sets the payload on c.get("jwtPayload")
+    const payload = c.get("jwtPayload") as any;
+    const patientId = payload?.id;
+
+    if (!patientId) {
+      return c.json({ error: { message: "Unauthorized", status: 401 } }, 401);
+    }
+
+    // import { getActiveVisitForPatient } from "../services/visit.service";
+    const { getActiveVisitForPatient } =
+      await import("../services/visit.service");
+    const visit = await getActiveVisitForPatient(patientId);
+
+    if (!visit) {
+      return c.json(
+        { error: { message: "No active visit found", status: 404 } },
+        404,
+      );
+    }
+
+    return c.json(toVisitResponse(visit), 200);
   });
 
   app.openapi(visitStatusRoute, async (c) => {
@@ -107,42 +176,60 @@ export function registerVisitRoutes(app: OpenAPIHono) {
     const statusResult = await getVisitStatus(id);
 
     if (!statusResult) {
-      return c.json({ error: { message: "Visit not found", status: 404 } }, 404);
+      return c.json(
+        { error: { message: "Visit not found", status: 404 } },
+        404,
+      );
     }
 
     const { visit, position, estimatedWaitMinutes } = statusResult;
-    return c.json({
-      queueNumber: visit.queueNumber,
-      status: visit.status,
-      position,
-      estimatedWaitMinutes,
-      department: { id: visit.department.id, name: visit.department.name },
-      patient: {
-        id: visit.patient.id,
-        name: visit.patient.name,
-        phone: visit.patient.phone,
+    return c.json(
+      {
+        queueNumber: visit.queueNumber,
+        status: visit.status,
+        position,
+        estimatedWaitMinutes,
+        department: { id: visit.department.id, name: visit.department.name },
+        patient: {
+          id: visit.patient.id,
+          name: visit.patient.name,
+          phone: visit.patient.phone,
+        },
       },
-    }, 200);
+      200,
+    );
   });
 
   app.openapi(callRoute, async (c) => {
     const { id } = c.req.valid("param");
     const visit = await updateVisitStatus(id, "called");
-    if (!visit) return c.json({ error: { message: "Visit not found", status: 404 } }, 404);
+    if (!visit)
+      return c.json(
+        { error: { message: "Visit not found", status: 404 } },
+        404,
+      );
     return c.json(toVisitResponse(visit), 200);
   });
 
   app.openapi(serveRoute, async (c) => {
     const { id } = c.req.valid("param");
     const visit = await updateVisitStatus(id, "served");
-    if (!visit) return c.json({ error: { message: "Visit not found", status: 404 } }, 404);
+    if (!visit)
+      return c.json(
+        { error: { message: "Visit not found", status: 404 } },
+        404,
+      );
     return c.json(toVisitResponse(visit), 200);
   });
 
   app.openapi(noShowRoute, async (c) => {
     const { id } = c.req.valid("param");
     const visit = await updateVisitStatus(id, "no_show");
-    if (!visit) return c.json({ error: { message: "Visit not found", status: 404 } }, 404);
+    if (!visit)
+      return c.json(
+        { error: { message: "Visit not found", status: 404 } },
+        404,
+      );
     return c.json(toVisitResponse(visit), 200);
   });
 }

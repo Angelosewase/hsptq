@@ -41,14 +41,16 @@ export const departmentSchema = z.object({
 
 export const queueResponseSchema = z.object({
   waiting: z.number(),
-  visits: z.array(z.object({
-    id: z.string(),
-    queueNumber: z.number(),
-    status: z.string(),
-    patientName: z.string(),
-    source: z.string(),
-    estimatedWaitMinutes: z.number().optional(),
-  })),
+  visits: z.array(
+    z.object({
+      id: z.string(),
+      queueNumber: z.number(),
+      status: z.string(),
+      patientName: z.string(),
+      source: z.string(),
+      estimatedWaitMinutes: z.number().optional(),
+    }),
+  ),
 });
 
 export const visitSchema = z.object({

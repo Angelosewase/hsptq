@@ -1,6 +1,9 @@
 import { OpenAPIHono, createRoute, z } from "@hono/zod-openapi";
 import { departmentSchema, errorSchema, queueResponseSchema } from "../schemas";
-import { listActiveDepartments, getDepartmentQueue } from "../services/department.service";
+import {
+  listActiveDepartments,
+  getDepartmentQueue,
+} from "../services/department.service";
 import { staffAuth } from "../lib/middleware";
 
 const listDepartmentsRoute = createRoute({
@@ -47,11 +50,14 @@ export function registerDepartmentRoutes(app: OpenAPIHono) {
   app.openapi(getDepartmentQueueRoute, async (c) => {
     const { id } = c.req.valid("param");
     const queue = await getDepartmentQueue(id);
-    
+
     if (!queue) {
-      return c.json({ error: { message: "Department not found", status: 404 } }, 404);
+      return c.json(
+        { error: { message: "Department not found", status: 404 } },
+        404,
+      );
     }
-    
+
     return c.json(queue, 200);
   });
 }

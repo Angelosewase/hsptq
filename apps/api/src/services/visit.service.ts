@@ -3,9 +3,13 @@ import type { VisitSource, VisitStatus } from "../generated/prisma/client";
 
 const AVG_VISIT_MINUTES = 10;
 
-export async function checkIn(patientId: string, departmentId: string, source: VisitSource) {
+export async function checkIn(
+  patientId: string,
+  departmentId: string,
+  source: VisitSource,
+) {
   const prisma = getPrisma();
-  
+
   const startOfDay = new Date();
   startOfDay.setHours(0, 0, 0, 0);
 
@@ -16,7 +20,7 @@ export async function checkIn(patientId: string, departmentId: string, source: V
         createdAt: { gte: startOfDay },
       },
     });
-    
+
     return tx.visit.create({
       data: {
         patientId,
@@ -30,12 +34,12 @@ export async function checkIn(patientId: string, departmentId: string, source: V
 
 export async function getVisitStatus(visitId: string) {
   const prisma = getPrisma();
-  
+
   const visit = await prisma.visit.findUnique({
     where: { id: visitId },
     include: { department: true, patient: true },
   });
-  
+
   if (!visit) return null;
 
   let position: number | null = null;
@@ -50,12 +54,19 @@ export async function getVisitStatus(visitId: string) {
     position = ahead + 1;
   }
 
-  return { visit, position, estimatedWaitMinutes: position === null ? 0 : position * AVG_VISIT_MINUTES };
+  return {
+    visit,
+    position,
+    estimatedWaitMinutes: position === null ? 0 : position * AVG_VISIT_MINUTES,
+  };
 }
 
-export async function updateVisitStatus(visitId: string, nextStatus: VisitStatus) {
+export async function updateVisitStatus(
+  visitId: string,
+  nextStatus: VisitStatus,
+) {
   const prisma = getPrisma();
-  
+
   const existing = await prisma.visit.findUnique({ where: { id: visitId } });
   if (!existing) return null;
 
@@ -66,5 +77,21 @@ export async function updateVisitStatus(visitId: string, nextStatus: VisitStatus
   return prisma.visit.update({
     where: { id: visitId },
     data,
+  });
+}
+
+export async function getActiveVisitForPatient(patientId: string) {
+  const prisma = getPrisma();
+
+  const startOfDay = new Date();
+  startOfDay.setHours(0, 0, 0, 0);
+
+  return prisma.visit.findFirst({
+    where: {
+      patientId,
+      createdAt: { gte: startOfDay },
+      status: { in: ["waiting", "called"] },
+    },
+    orderBy: { createdAt: "desc" },
   });
 }

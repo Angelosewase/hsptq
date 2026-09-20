@@ -10,8 +10,10 @@ export async function listActiveDepartments() {
 
 export async function getDepartmentQueue(departmentId: string) {
   const prisma = getPrisma();
-  
-  const department = await prisma.department.findUnique({ where: { id: departmentId } });
+
+  const department = await prisma.department.findUnique({
+    where: { id: departmentId },
+  });
   if (!department) return null;
 
   const startOfDay = new Date();
@@ -28,8 +30,8 @@ export async function getDepartmentQueue(departmentId: string) {
   });
 
   return {
-    waiting: visits.filter(v => v.status === "waiting").length,
-    visits: visits.map(v => ({
+    waiting: visits.filter((v) => v.status === "waiting").length,
+    visits: visits.map((v) => ({
       id: v.id,
       queueNumber: v.queueNumber,
       status: v.status,

@@ -6,13 +6,14 @@ export function registerUssdRoutes(app: OpenAPIHono) {
   // We don't necessarily need to document this in swagger as it is a webhook for an external service.
   app.post("/ussd/africastalking", async (c) => {
     const body = await c.req.parseBody();
-    
+
     const sessionId = typeof body.sessionId === "string" ? body.sessionId : "";
-    const phoneNumber = typeof body.phoneNumber === "string" ? body.phoneNumber : "";
+    const phoneNumber =
+      typeof body.phoneNumber === "string" ? body.phoneNumber : "";
     const text = typeof body.text === "string" ? body.text : "";
 
     const response = await handleUssdRequest(sessionId, phoneNumber, text);
-    
+
     // Africa's Talking expects plain text starting with CON or END
     c.header("Content-Type", "text/plain");
     return c.text(response);
