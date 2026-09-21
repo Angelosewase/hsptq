@@ -1,0 +1,419 @@
+/* ============================================================
+   Served & Patient History
+   ============================================================ */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cp-gutter);
+}
+
+.pageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pageTitle {
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--cp-on-surface);
+}
+
+.pageSubtitle {
+  font-size: 13px;
+  color: var(--cp-muted);
+  margin-top: 2px;
+}
+
+.exportBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 38px;
+  padding: 0 16px;
+  border: 1px solid var(--cp-outline);
+  border-radius: var(--cp-radius);
+  background: var(--cp-surface);
+  color: var(--cp-on-surface);
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.15s;
+}
+
+.exportBtn:hover {
+  border-color: var(--cp-primary);
+  color: var(--cp-primary);
+}
+
+/* ── Filters ── */
+.filterBar {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.searchWrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 38px;
+  padding: 0 12px;
+  border: 1px solid var(--cp-outline);
+  border-radius: var(--cp-radius);
+  background: var(--cp-surface);
+  color: var(--cp-muted);
+  flex: 1;
+  max-width: 360px;
+  transition: border-color 0.15s;
+}
+
+.searchWrap:focus-within {
+  border-color: var(--cp-primary);
+  box-shadow: 0 0 0 2px rgba(14, 116, 144, 0.15);
+}
+
+.searchInput {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 13px;
+  color: var(--cp-on-surface);
+  flex: 1;
+}
+
+.searchInput::placeholder {
+  color: var(--cp-muted);
+}
+
+.selectFilter {
+  height: 38px;
+  padding: 0 32px 0 12px;
+  border: 1px solid var(--cp-outline);
+  border-radius: var(--cp-radius);
+  background: var(--cp-surface);
+  color: var(--cp-on-surface);
+  font-size: 13px;
+  font-weight: 500;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2364748B' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  cursor: pointer;
+}
+
+.selectFilter:focus {
+  outline: none;
+  border-color: var(--cp-primary);
+  box-shadow: 0 0 0 2px rgba(14, 116, 144, 0.15);
+}
+
+/* ── Layout ── */
+.layoutBody {
+  display: flex;
+  gap: 20px;
+}
+
+/* ── Table ── */
+.tableCard {
+  flex: 1;
+  background: var(--cp-surface);
+  border: 1px solid var(--cp-outline-variant);
+  border-radius: var(--cp-radius-lg);
+  overflow: hidden;
+}
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+.table {
+  min-width: 700px;
+}
+
+.table th {
+  padding: 12px 16px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--cp-muted);
+  text-align: left;
+  background: var(--cp-surface-dim);
+  border-bottom: 1px solid var(--cp-outline-variant);
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 12px 16px;
+  font-size: 14px;
+  border-bottom: 1px solid var(--cp-outline-variant);
+  vertical-align: middle;
+}
+
+.table tbody tr {
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.table tbody tr:hover {
+  background: var(--cp-waiting-bg);
+}
+
+.rowSelected {
+  background: rgba(14, 116, 144, 0.06) !important;
+}
+
+.rowSelected td:first-child {
+  box-shadow: inset 3px 0 0 var(--cp-primary);
+}
+
+.queueNum {
+  font-weight: 700;
+  color: var(--cp-on-surface);
+  font-variant-numeric: tabular-nums;
+}
+
+.patientCell {
+  display: flex;
+  flex-direction: column;
+}
+
+.patientName {
+  font-weight: 600;
+  color: var(--cp-on-surface);
+}
+
+.patientPhone {
+  font-size: 12px;
+  color: var(--cp-muted);
+  margin-top: 1px;
+}
+
+.mono {
+  font-variant-numeric: tabular-nums;
+}
+
+.duration {
+  font-weight: 600;
+  color: var(--cp-primary);
+}
+
+/* ── Channel Chips ── */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 8px;
+  border-radius: var(--cp-radius-full);
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.chip_app {
+  background: var(--cp-channel-app-bg);
+  color: var(--cp-channel-app-text);
+}
+
+.chip_qr {
+  background: var(--cp-channel-qr-bg);
+  color: var(--cp-channel-qr-text);
+}
+
+.chip_ussd {
+  background: var(--cp-channel-ussd-bg);
+  color: var(--cp-channel-ussd-text);
+}
+
+/* ── Table Footer ── */
+.tableFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  border-top: 1px solid var(--cp-outline-variant);
+}
+
+.showing {
+  font-size: 12px;
+  color: var(--cp-muted);
+}
+
+.pagination {
+  display: flex;
+  gap: 4px;
+}
+
+.pageBtn {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--cp-outline);
+  border-radius: var(--cp-radius);
+  background: var(--cp-surface);
+  color: var(--cp-on-surface);
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.15s;
+}
+
+.pageBtn:hover:not(:disabled) {
+  border-color: var(--cp-primary);
+  color: var(--cp-primary);
+}
+
+.pageBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.pageBtnActive {
+  background: var(--cp-primary);
+  color: white;
+  border-color: var(--cp-primary);
+}
+
+/* ── Detail Panel ── */
+.detailPanel {
+  width: 320px;
+  flex-shrink: 0;
+  background: var(--cp-surface);
+  border: 1px solid var(--cp-outline-variant);
+  border-radius: var(--cp-radius-lg);
+  overflow: hidden;
+  animation: slideIn 0.2s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.detailHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--cp-outline-variant);
+}
+
+.detailTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--cp-on-surface);
+}
+
+.closeBtn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: var(--cp-radius);
+  background: transparent;
+  color: var(--cp-muted);
+  transition: all 0.15s;
+}
+
+.closeBtn:hover {
+  background: var(--cp-surface-dim);
+  color: var(--cp-on-surface);
+}
+
+.detailBody {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.detailField {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.detailLabel {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--cp-muted);
+}
+
+.detailValue {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--cp-on-surface);
+}
+
+/* ── Timeline ── */
+.timeline {
+  margin-top: 8px;
+  padding-top: 16px;
+  border-top: 1px solid var(--cp-outline-variant);
+}
+
+.timelineTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--cp-on-surface);
+  margin-bottom: 16px;
+}
+
+.timelineItem {
+  display: flex;
+  gap: 12px;
+  padding-bottom: 16px;
+  position: relative;
+}
+
+.timelineItem:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 12px;
+  bottom: 0;
+  width: 2px;
+  background: var(--cp-outline-variant);
+}
+
+.timelineDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--cp-outline);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.timelineDotCalled {
+  background: var(--cp-called);
+}
+
+.timelineDotServed {
+  background: var(--cp-served);
+}
+
+.timelineEvent {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--cp-on-surface);
+}
+
+.timelineTime {
+  font-size: 12px;
+  color: var(--cp-muted);
+  font-variant-numeric: tabular-nums;
+  margin-top: 1px;
+}
