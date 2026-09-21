@@ -1,0 +1,341 @@
+/* ============================================================
+   Department Analytics
+   ============================================================ */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cp-gutter);
+}
+
+.pageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pageTitle {
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--cp-on-surface);
+}
+
+.pageSubtitle {
+  font-size: 13px;
+  color: var(--cp-muted);
+  margin-top: 2px;
+}
+
+.headerActions {
+  display: flex;
+  gap: 12px;
+}
+
+.periodSelect {
+  height: 38px;
+  padding: 0 32px 0 12px;
+  border: 1px solid var(--cp-outline);
+  border-radius: var(--cp-radius);
+  background: var(--cp-surface);
+  color: var(--cp-on-surface);
+  font-size: 13px;
+  font-weight: 500;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2364748B' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  cursor: pointer;
+}
+
+.periodSelect:focus {
+  outline: none;
+  border-color: var(--cp-primary);
+  box-shadow: 0 0 0 2px rgba(14, 116, 144, 0.15);
+}
+
+/* ── Summary Cards ── */
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.summaryCard {
+  background: var(--cp-surface);
+  border: 1px solid var(--cp-outline-variant);
+  border-radius: var(--cp-radius-lg);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: box-shadow 0.15s;
+}
+
+.summaryCard:hover {
+  box-shadow: var(--cp-shadow-sm);
+}
+
+.summaryLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--cp-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.summaryValue {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--cp-on-surface);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.summaryTrend {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--cp-muted);
+}
+
+.trendUp {
+  color: var(--cp-served-text);
+}
+
+.trendDown {
+  color: var(--cp-served-text);
+}
+
+.trendWarn {
+  color: var(--cp-urgent-text);
+}
+
+/* ── Charts Row ── */
+.chartsRow {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+}
+
+.chartCard {
+  background: var(--cp-surface);
+  border: 1px solid var(--cp-outline-variant);
+  border-radius: var(--cp-radius-lg);
+  padding: 24px;
+}
+
+.chartTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--cp-on-surface);
+  margin-bottom: 24px;
+}
+
+/* ── Bar Chart ── */
+.barChart {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  height: 200px;
+}
+
+.barCol {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  height: 100%;
+}
+
+.barTrack {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.bar {
+  width: 100%;
+  max-width: 40px;
+  background: var(--cp-primary);
+  border-radius: var(--cp-radius) var(--cp-radius) 0 0;
+  position: relative;
+  min-height: 4px;
+  transition: height 0.5s ease;
+  opacity: 0.7;
+}
+
+.bar:hover {
+  opacity: 1;
+}
+
+.barPeak {
+  background: var(--cp-tertiary);
+  opacity: 1;
+}
+
+.barValue {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--cp-on-surface);
+  white-space: nowrap;
+}
+
+.barLabel {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--cp-muted);
+  white-space: nowrap;
+}
+
+/* ── Channel Distribution ── */
+.channelList {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.channelItem {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.channelHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.channelName {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--cp-on-surface);
+}
+
+.channelCount {
+  font-size: 12px;
+  color: var(--cp-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.channelTrack {
+  height: 8px;
+  background: var(--cp-surface-dim);
+  border-radius: var(--cp-radius-full);
+  overflow: hidden;
+}
+
+.channelBar {
+  height: 100%;
+  border-radius: var(--cp-radius-full);
+  transition: width 0.5s ease;
+}
+
+.channelTotal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20px;
+  margin-top: 20px;
+  border-top: 1px solid var(--cp-outline-variant);
+  font-size: 13px;
+  color: var(--cp-muted);
+}
+
+.channelTotalValue {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--cp-on-surface);
+}
+
+/* ── Department Comparison ── */
+.deptCard {
+  background: var(--cp-surface);
+  border: 1px solid var(--cp-outline-variant);
+  border-radius: var(--cp-radius-lg);
+  padding: 24px;
+}
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+.table {
+  min-width: 600px;
+}
+
+.table th {
+  padding: 12px 16px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--cp-muted);
+  text-align: left;
+  background: var(--cp-surface-dim);
+  border-bottom: 1px solid var(--cp-outline-variant);
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 14px 16px;
+  font-size: 14px;
+  border-bottom: 1px solid var(--cp-outline-variant);
+  vertical-align: middle;
+}
+
+.table tbody tr {
+  transition: background 0.1s;
+}
+
+.table tbody tr:hover {
+  background: var(--cp-waiting-bg);
+}
+
+.deptName {
+  font-weight: 600;
+  color: var(--cp-on-surface);
+}
+
+.deptBarCell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.deptBar {
+  height: 6px;
+  background: var(--cp-primary);
+  border-radius: var(--cp-radius-full);
+  min-width: 4px;
+  opacity: 0.6;
+}
+
+.cellWarn {
+  color: var(--cp-urgent);
+  font-weight: 600;
+}
+
+.cellGood {
+  color: var(--cp-served-text);
+  font-weight: 600;
+}
+
+.stars {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+}
+
+.starIcon {
+  color: #F59E0B;
+  font-size: 16px;
+}

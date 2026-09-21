@@ -1,0 +1,387 @@
+/* ============================================================
+   Live Queue Staff Dashboard
+   ============================================================ */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cp-gutter);
+}
+
+/* ── Page Header ── */
+.pageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pageTitle {
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 36px;
+  color: var(--cp-on-surface);
+}
+
+.pageSubtitle {
+  font-size: 13px;
+  color: var(--cp-muted);
+  margin-top: 2px;
+}
+
+.callNextBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 42px;
+  padding: 0 20px;
+  background: var(--cp-primary);
+  color: white;
+  border: none;
+  border-radius: var(--cp-radius);
+  font-size: 14px;
+  font-weight: 600;
+  transition: background 0.15s;
+}
+
+.callNextBtn:hover {
+  background: var(--cp-primary-dark);
+}
+
+.callNextBtn:active {
+  transform: translateY(1px);
+}
+
+/* ── Metric Cards ── */
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.metricCard {
+  background: var(--cp-surface);
+  border: 1px solid var(--cp-outline-variant);
+  border-radius: var(--cp-radius-lg);
+  padding: 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  position: relative;
+  transition: box-shadow 0.15s;
+}
+
+.metricCard:hover {
+  box-shadow: var(--cp-shadow-sm);
+}
+
+.metricIconWrap {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--cp-radius-lg);
+  background: rgba(14, 116, 144, 0.08);
+  color: var(--cp-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.metricBody {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.metricLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--cp-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.metricValue {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--cp-on-surface);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+}
+
+.metricDelta {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--cp-muted);
+  background: var(--cp-surface-dim);
+  padding: 2px 8px;
+  border-radius: var(--cp-radius-full);
+  white-space: nowrap;
+  align-self: flex-start;
+  margin-top: 2px;
+}
+
+.metricDeltaGood {
+  color: var(--cp-served-text);
+  background: var(--cp-served-bg);
+}
+
+.metricDeltaWarn {
+  color: var(--cp-urgent-text);
+  background: var(--cp-urgent-bg);
+}
+
+/* ── Table Card ── */
+.tableCard {
+  background: var(--cp-surface);
+  border: 1px solid var(--cp-outline-variant);
+  border-radius: var(--cp-radius-lg);
+  overflow: hidden;
+}
+
+.tableHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--cp-outline-variant);
+}
+
+.tableTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--cp-on-surface);
+}
+
+.tableFilters {
+  display: flex;
+  gap: 4px;
+}
+
+.filterBtn {
+  height: 30px;
+  padding: 0 12px;
+  border: 1px solid var(--cp-outline);
+  border-radius: var(--cp-radius);
+  background: var(--cp-surface);
+  color: var(--cp-muted);
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.15s;
+}
+
+.filterBtn:hover {
+  border-color: var(--cp-primary);
+  color: var(--cp-primary);
+}
+
+.filterBtnActive {
+  background: var(--cp-primary);
+  color: white;
+  border-color: var(--cp-primary);
+}
+
+/* ── Table ── */
+.tableWrap {
+  overflow-x: auto;
+}
+
+.table {
+  min-width: 900px;
+}
+
+.table th {
+  padding: 12px 16px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--cp-muted);
+  text-align: left;
+  background: var(--cp-surface-dim);
+  border-bottom: 1px solid var(--cp-outline-variant);
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 12px 16px;
+  font-size: 14px;
+  border-bottom: 1px solid var(--cp-outline-variant);
+  vertical-align: middle;
+}
+
+.table tbody tr {
+  transition: background 0.1s;
+}
+
+.table tbody tr:hover {
+  background: var(--cp-waiting-bg);
+}
+
+.table tbody tr:hover td:first-child {
+  box-shadow: inset 3px 0 0 var(--cp-primary);
+}
+
+.rowBreached {
+  background: var(--cp-urgent-row-bg) !important;
+}
+
+.rowBreached td:first-child {
+  box-shadow: inset 3px 0 0 var(--cp-urgent) !important;
+}
+
+.queueNum {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--cp-on-surface);
+  font-variant-numeric: tabular-nums;
+}
+
+.patientCell {
+  display: flex;
+  flex-direction: column;
+}
+
+.patientName {
+  font-weight: 600;
+  color: var(--cp-on-surface);
+}
+
+.patientPhone {
+  font-size: 12px;
+  color: var(--cp-muted);
+  margin-top: 1px;
+}
+
+.mono {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+.waitBreached {
+  color: var(--cp-urgent);
+  font-weight: 700;
+}
+
+/* ── Status Badges ── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 8px;
+  border-radius: var(--cp-radius-full);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.badge_waiting {
+  background: var(--cp-surface-dim);
+  color: var(--cp-muted);
+}
+
+.badge_called {
+  background: var(--cp-called-bg);
+  color: var(--cp-called-text);
+}
+
+.badge_inconsultation {
+  background: var(--cp-called-bg);
+  color: var(--cp-called-text);
+}
+
+.badge_served {
+  background: var(--cp-served-bg);
+  color: var(--cp-served-text);
+}
+
+.badge_noshow {
+  background: var(--cp-urgent-bg);
+  color: var(--cp-urgent-text);
+}
+
+/* ── Channel Chips ── */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: var(--cp-radius-full);
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.chipIcon {
+  font-size: 10px;
+}
+
+.chip_app {
+  background: var(--cp-channel-app-bg);
+  color: var(--cp-channel-app-text);
+}
+
+.chip_qr {
+  background: var(--cp-channel-qr-bg);
+  color: var(--cp-channel-qr-text);
+}
+
+.chip_ussd {
+  background: var(--cp-channel-ussd-bg);
+  color: var(--cp-channel-ussd-text);
+}
+
+/* ── Actions ── */
+.actions {
+  display: flex;
+  gap: 6px;
+}
+
+.actionBtn {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--cp-outline);
+  border-radius: var(--cp-radius);
+  background: var(--cp-surface);
+  color: var(--cp-primary);
+  transition: all 0.15s;
+}
+
+.actionBtn:hover {
+  background: rgba(14, 116, 144, 0.08);
+  border-color: var(--cp-primary);
+}
+
+.actionBtnDanger {
+  color: var(--cp-urgent);
+}
+
+.actionBtnDanger:hover {
+  background: rgba(225, 29, 72, 0.08);
+  border-color: var(--cp-urgent);
+}
+
+.actionBtnServe {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 30px;
+  padding: 0 10px;
+  border: 1px solid var(--cp-served);
+  border-radius: var(--cp-radius);
+  background: var(--cp-served-bg);
+  color: var(--cp-served-text);
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.15s;
+}
+
+.actionBtnServe:hover {
+  background: var(--cp-served);
+  color: white;
+}
